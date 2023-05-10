@@ -1,7 +1,7 @@
 package com.example.TechItEasy.controllers;
 
-import com.example.TechItEasy.Television;
 import com.example.TechItEasy.exceptions.RecordNotFoundException;
+import com.example.TechItEasy.model.Television;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
