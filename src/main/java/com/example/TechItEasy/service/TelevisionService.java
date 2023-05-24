@@ -82,7 +82,7 @@ public class TelevisionService {
 
         televisionRepository.delete(television);
 
-        return "Television successfully removed";
+        return "Well well I hope you know what you're doing, because you just removed " + television.getName() + "!";
     }
 
 

@@ -1,77 +1,79 @@
 package com.example.TechItEasy.controllers;
 
+import com.example.TechItEasy.dto.TelevisionInputDto;
+import com.example.TechItEasy.dto.TelevisionOutputDto;
 import com.example.TechItEasy.model.Television;
-import com.example.TechItEasy.repository.TelevisionRepository;
+import com.example.TechItEasy.service.TelevisionService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/televisions")
 public class TelevisionController {
 
-    private final TelevisionRepository televisionRepository;
-    public TelevisionController(TelevisionRepository televisionRepository) {
-        this.televisionRepository = televisionRepository;
+    private final TelevisionService televisionService;
+
+    public TelevisionController(TelevisionService televisionService) {
+        this.televisionService = televisionService;
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Television>> getAllTelevisions(){
-        return ResponseEntity.ok(televisionRepository.findAll());
+    public ResponseEntity<List<TelevisionOutputDto>> getAllTelevisions() {
+        return ResponseEntity.ok(televisionService.getAllTelevisions());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Television> getTelevisionByID(@PathVariable Long id) {
-        Optional<Television> television =  televisionRepository.findById(id);
-
-        if (television.isEmpty()) {
-            throw new IndexOutOfBoundsException("Television with id-number" + id + " cannot be found");
-        } else {
-            return ResponseEntity.ok().body(television.get());
-        }
+    public ResponseEntity<TelevisionOutputDto> getTelevisionByID(@PathVariable Long id) {
+        return ResponseEntity.ok().body(televisionService.getTelevisionById(id));
     }
+
+    // Waarom <Object> ??????
     @PostMapping
-    public ResponseEntity<Television> addTelevision(@RequestBody Television television){
-        Television televisionPostMap = televisionRepository.save(television);
-        return ResponseEntity.ok().body(televisionPostMap);
+    public ResponseEntity<Object> addTelevision(@RequestBody TelevisionInputDto televisionInputDto, BindingResult br) {
+        if (br.hasFieldErrors()) {
+            StringBuilder sb = new StringBuilder();
+            for (FieldError fe : br.getFieldErrors()) {
+                sb.append(fe.getField() + ": ");
+                sb.append(fe.getDefaultMessage());
+                sb.append("\n");
+            }
+            return ResponseEntity.badRequest().body(sb.toString());
+        } else {
+            TelevisionOutputDto newId = televisionService.addTelevision(televisionInputDto);
+            //hiermee creeer je het pad waarin het object wordt opgeslagen.
+            URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentRequest().path("/" + newId).toUriString());
+            return ResponseEntity.created(uri).body(newId);
+        }
+
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTelevisionByID(@PathVariable Long id) {
-        if (televisionRepository.findById(id).isEmpty()) {
-            throw new IndexOutOfBoundsException("Television with id-number" + id + " cannot be found");
-        } else {
-            televisionRepository.deleteById(id);
-            return ResponseEntity.noContent().build();// Hier snap ik niet zo goed waarom dit moet
-        }
+    public ResponseEntity<HttpStatus> deleteTelevision(@PathVariable Long id) {
+        televisionService.deleteTelevision(id);
+        return ResponseEntity.noContent().build();
     }
+
+
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateTelevisionByID(@PathVariable Long id, @RequestBody Television t) {
-        if (televisionRepository.findById(id).isEmpty()) {
-            throw new IndexOutOfBoundsException("Television with id-number" + id + " cannot be found");
-        } else {
-            Television televisionPutMap = televisionRepository.findById(id).get();
-            televisionPutMap.setType(t.getType());
-            televisionPutMap.setBrand(t.getBrand());
-            televisionPutMap.setName(t.getName());
-            televisionPutMap.setPrice(t.getPrice());
-            televisionPutMap.setAvailableSize(t.getAvailableSize());
-            televisionPutMap.setRefreshRate(t.getRefreshRate());
-            televisionPutMap.setScreenType(t.getScreenType());
-            televisionPutMap.setScreenQuality(t.getScreenQuality());
-            televisionPutMap.setSmartTv(t.getSmartTv());
-            televisionPutMap.setWifi(t.getWifi());
-            televisionPutMap.setVoiceControl(t.getVoiceControl());
-            televisionPutMap.setHdr(t.getHdr());
-            televisionPutMap.setBluetooth(t.getBluetooth());
-            televisionPutMap.setAmbiLight(t.getAmbiLight());
-            televisionPutMap.setOriginalStock(t.getOriginalStock());
-            televisionPutMap.setSold(t.getSold());
-
-            Television television = televisionRepository.save(televisionPutMap);
-
-            return ResponseEntity.ok().body(television);
+    public ResponseEntity<Object> updateTelevision(@PathVariable Long id, @Valid @RequestBody TelevisionInputDto televisionInputDto, BindingResult br) {
+        if (br.hasFieldErrors()) {
+            StringBuilder sb = new StringBuilder();
+            for (FieldError fe : br.getFieldErrors()) {
+                sb.append(fe.getField() + ": ");
+                sb.append(fe.getDefaultMessage());
+                sb.append("\n");
+            }
+            return ResponseEntity.badRequest().body(sb.toString());
         }
+        return ResponseEntity.ok().body(televisionService.updateTelevision(id, televisionInputDto));
     }
 }
