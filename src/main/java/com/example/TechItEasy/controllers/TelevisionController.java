@@ -67,7 +67,7 @@ public class TelevisionController {
             televisionPutMap.setBluetooth(t.getBluetooth());
             televisionPutMap.setAmbiLight(t.getAmbiLight());
             televisionPutMap.setOriginalStock(t.getOriginalStock());
-            televisionPutMap.setSold(t.getSold();
+            televisionPutMap.setSold(t.getSold());
 
             Television television = televisionRepository.save(televisionPutMap);
 
