@@ -3,7 +3,9 @@ package com.example.TechItEasy.service;
 import com.example.TechItEasy.dto.input.TelevisionInputDto;
 import com.example.TechItEasy.dto.output.TelevisionOutputDto;
 import com.example.TechItEasy.exceptions.RecordNotFoundException;
+import com.example.TechItEasy.model.RemoteController;
 import com.example.TechItEasy.model.Television;
+import com.example.TechItEasy.repository.RemoteControllerRepository;
 import com.example.TechItEasy.repository.TelevisionRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,15 @@ import java.util.List;
 public class TelevisionService {
     //maken een repository aan die met de database kan communiceren
     private final TelevisionRepository televisionRepository;
+    private final RemoteControllerRepository remoteControllerRepository;
 
-    public TelevisionService(TelevisionRepository televisionRepository) {
+
+    public TelevisionService(TelevisionRepository televisionRepository, RemoteControllerRepository remoteControllerRepository) {
         this.televisionRepository = televisionRepository;
+        this.remoteControllerRepository = remoteControllerRepository;
     }
+
+
 
     public TelevisionOutputDto getTelevisionById(Long id) {
         Television television = televisionRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Television with id-number" + id + " cannot be found"));
@@ -82,6 +89,16 @@ public class TelevisionService {
         televisionRepository.delete(television);
 
         return "Well well I hope you know what you're doing, because you just removed " + television.getName() + "!";
+    }
+
+    public TelevisionOutputDto assignRcToTv(Long id, Long rcId){
+        Television television = televisionRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("Television with id " + id + " doesn't exist"));
+        RemoteController remoteController = remoteControllerRepository.findById(rcId).orElseThrow(() -> new RecordNotFoundException("RemoteController with id " + rcId + " doesn't exist"));
+        television.setRemoteController(remoteController);
+        television.setRemoteController(remoteController);
+        televisionRepository.save(television);
+        return transferTelevisionModelToOutputDto(television);
+
     }
 
 

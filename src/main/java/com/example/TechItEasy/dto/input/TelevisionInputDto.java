@@ -26,4 +26,6 @@ public class TelevisionInputDto {
     public Boolean ambiLight;
     public Integer originalStock;
     public Integer sold;
+    public Long rcId;
+
 }

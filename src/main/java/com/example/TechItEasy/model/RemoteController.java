@@ -1,9 +1,6 @@
 package com.example.TechItEasy.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,5 +18,9 @@ public class RemoteController {
     private String brand;
     private Double price;
     private Integer originalStock;
+
+    //dit is de target side en televisoon is de owner side van de relatie
+    @OneToOne(mappedBy = "remotecontroller")
+    private Television television;
 
 }
