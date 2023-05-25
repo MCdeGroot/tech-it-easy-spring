@@ -1,8 +1,7 @@
 package com.example.TechItEasy.controllers;
 
-import com.example.TechItEasy.dto.TelevisionInputDto;
-import com.example.TechItEasy.dto.TelevisionOutputDto;
-import com.example.TechItEasy.model.Television;
+import com.example.TechItEasy.dto.input.TelevisionInputDto;
+import com.example.TechItEasy.dto.output.TelevisionOutputDto;
 import com.example.TechItEasy.service.TelevisionService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/televisions")

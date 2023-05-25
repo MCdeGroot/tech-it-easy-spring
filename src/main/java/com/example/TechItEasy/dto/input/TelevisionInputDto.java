@@ -1,4 +1,4 @@
-package com.example.TechItEasy.dto;
+package com.example.TechItEasy.dto.input;
 
 // Deze klasse wordt gebruikt in je Get, Post en Put methodes. Overal waat je een Television als returnwaarde wilt geven.
 // Een input DTO behoet geen validatie

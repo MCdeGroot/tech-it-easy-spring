@@ -1,4 +1,4 @@
-package com.example.TechItEasy.dto;
+package com.example.TechItEasy.dto.output;
 
 public class TelevisionOutputDto {
     public Long id;

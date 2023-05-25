@@ -1,7 +1,7 @@
 package com.example.TechItEasy.service;
 
-import com.example.TechItEasy.dto.TelevisionInputDto;
-import com.example.TechItEasy.dto.TelevisionOutputDto;
+import com.example.TechItEasy.dto.input.TelevisionInputDto;
+import com.example.TechItEasy.dto.output.TelevisionOutputDto;
 import com.example.TechItEasy.exceptions.RecordNotFoundException;
 import com.example.TechItEasy.model.Television;
 import com.example.TechItEasy.repository.TelevisionRepository;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TelevisionService {
